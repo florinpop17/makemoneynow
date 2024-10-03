@@ -3,44 +3,78 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="Make Money Now - Your Financial Growth Forum. Join professionals seeking advice on boosting income from jobs and businesses. Ask questions, get answers, and unlock your financial potential."
+        />
+        <meta
+            name="keywords"
+            content="financial growth, money making, income boost, professional advice, business growth, financial forum"
+        />
+        <meta name="author" content="Make Money Now" />
+        <meta name="robots" content="index, follow" />
+        <meta
+            property="og:title"
+            content="Make Money Now - Your Financial Growth Forum"
+        />
+        <meta
+            property="og:description"
+            content="Join our forum where professionals seek advice on boosting income from jobs and businesses. Ask questions, get answers, and unlock your financial potential."
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content="https://www.makemoneynow.com" />
+        <meta
+            property="og:image"
+            content="https://www.makemoneynow.com/images/thumbnail.jpg"
+        />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+            name="twitter:title"
+            content="Make Money Now - Your Financial Growth Forum"
+        />
+        <meta
+            name="twitter:description"
+            content="Join our forum where professionals seek advice on boosting income from jobs and businesses. Ask questions, get answers, and unlock your financial potential."
+        />
+        <meta
+            name="twitter:image"
+            content="https://www.makemoneynow.com/images/thumbnail.jpg"
+        />
+        <link rel="canonical" href="https://www.makemoneynow.com" />
         <title>Make Money Now - Your Financial Growth Forum</title>
         <script src="https://cdn.tailwindcss.com"></script>
         <style>
-            @keyframes fadeInUp {
-                from {
-                    opacity: 0;
-                    transform: translateY(20px);
-                }
-                to {
-                    opacity: 1;
-                    transform: translateY(0);
-                }
-            }
-            .animate-fadeInUp {
-                animation: fadeInUp 0.6s ease-out;
-            }
             body {
                 background: linear-gradient(135deg, #000000, #1a1a1a);
                 min-height: 100vh;
+            }
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+            .animate-fadeIn {
+                animation: fadeIn 0.3s ease-out;
             }
         </style>
     </head>
     <body class="text-white flex items-center justify-center min-h-screen">
         <header class="py-16">
             <div class="container mx-auto px-4 max-w-xl">
-                <h1
-                    class="text-6xl font-extrabold text-center mb-6 animate-fadeInUp"
-                >
+                <h1 class="text-6xl font-extrabold text-center mb-6">
                     Make Money Now
                 </h1>
                 <p
-                    class="text-2xl text-center mb-8 animate-fadeInUp"
+                    class="text-2xl text-center mb-8"
                     style="animation-delay: 0.2s"
                 >
                     Your Financial Growth Forum
                 </p>
                 <p
-                    class="text-xl text-center mb-8 animate-fadeInUp"
+                    class="text-xl text-center mb-8"
                     style="animation-delay: 0.4s"
                 >
                     Join our forum where professionals seek advice on boosting
@@ -48,16 +82,59 @@
                     and unlock your financial potential.
                 </p>
                 <div class="text-center">
-                    <a
-                        href="#"
-                        class="inline-block px-8 py-4 text-lg bg-white text-black rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105 animate-fadeInUp"
+                    <button
+                        id="waitlistButton"
+                        class="inline-block px-8 py-4 text-lg bg-white text-black rounded-full hover:bg-gray-200 transition duration-300 transform hover:scale-105"
                         style="animation-delay: 0.6s"
                     >
                         Join the Waitlist
-                    </a>
+                    </button>
                 </div>
             </div>
         </header>
-        <!-- Removed the separate container div -->
+
+        <div
+            id="waitlistCard"
+            class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 hidden"
+        >
+            <div
+                class="bg-white text-black p-8 rounded-lg shadow-lg max-w-md animate-fadeIn"
+            >
+                <h2 class="text-2xl font-bold mb-4">Work in Progress</h2>
+                <p class="mb-4">
+                    Sorry, our waitlist feature is not ready yet. We're still
+                    working on it!
+                </p>
+                <p class="mb-6">
+                    For updates, please reach out to me on Twitter:
+                    <a
+                        href="https://twitter.com/florinpop1705"
+                        target="_blank"
+                        class="text-blue-600 hover:underline"
+                        >@florinpop1705</a
+                    >
+                </p>
+                <button
+                    id="closeCard"
+                    class="bg-black text-white px-4 py-2 rounded hover:bg-gray-800"
+                >
+                    Close
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const waitlistButton = document.getElementById("waitlistButton");
+            const waitlistCard = document.getElementById("waitlistCard");
+            const closeCard = document.getElementById("closeCard");
+
+            waitlistButton.addEventListener("click", () => {
+                waitlistCard.classList.remove("hidden");
+            });
+
+            closeCard.addEventListener("click", () => {
+                waitlistCard.classList.add("hidden");
+            });
+        </script>
     </body>
 </html>
