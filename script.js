@@ -9,7 +9,7 @@ const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Configuration
 const CONFIG = {
-    startDate: new Date("2025-02-17T15:14:00.000+02:00"),
+    startDate: new Date("2025-02-17T16:00:00.000+02:00"),
     daysToSell: 100,
     priceDecreasePerSecond: 0.01,
 };
@@ -267,7 +267,7 @@ function init() {
             month: "long",
             day: "numeric",
             year: "numeric",
-        }) + " (UTC+0)";
+        });
 
     // Set starting price elements
     document.querySelectorAll("[data-starting-price]").forEach((element) => {
