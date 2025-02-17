@@ -72,6 +72,7 @@
             href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap"
             rel="stylesheet"
         />
+        <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
         <style>
             @keyframes gradient {
                 0% {
@@ -486,6 +487,80 @@
                 </div>
             </div>
         </main>
+        <footer class="mt-16 py-8 bg-black/50 border-t border-white/10">
+            <div class="container mx-auto px-4">
+                <div class="max-w-5xl mx-auto">
+                    <div
+                        class="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-sm"
+                    >
+                        <h3 class="text-lg md:text-xl font-medium mb-4">
+                            Get notified when price is below...
+                        </h3>
+
+                        <div class="form-container">
+                            <form id="alertForm">
+                                <div class="flex flex-col md:flex-row gap-4">
+                                    <div class="flex-1">
+                                        <label
+                                            for="email"
+                                            class="block text-sm text-gray-400 mb-1"
+                                        >
+                                            Email address
+                                        </label>
+                                        <input
+                                            type="email"
+                                            id="email"
+                                            required
+                                            class="w-full px-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                                            placeholder="you@example.com"
+                                        />
+                                    </div>
+                                    <div class="flex-1">
+                                        <label
+                                            for="targetPrice"
+                                            class="block text-sm text-gray-400 mb-1"
+                                        >
+                                            Notify me when price is below
+                                        </label>
+                                        <div class="relative">
+                                            <span
+                                                class="absolute left-4 top-2 text-gray-400"
+                                                >$</span
+                                            >
+                                            <input
+                                                type="number"
+                                                id="targetPrice"
+                                                required
+                                                min="0"
+                                                step="0.01"
+                                                class="w-full pl-8 pr-4 py-2 bg-black/50 border border-white/10 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
+                                                placeholder="50000.00"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div class="flex items-end">
+                                        <button
+                                            type="submit"
+                                            class="w-full md:w-auto px-6 py-2 bg-blue-500 text-white rounded-lg font-medium hover:bg-blue-400 transition-colors"
+                                        >
+                                            Set Alert
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <div
+                                id="successMessage"
+                                class="hidden mt-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg text-green-400 text-sm"
+                            >
+                                Success! We'll email you when the price drops
+                                below your target.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
         <div
             id="screenshotModal"
             class="fixed inset-0 bg-black/90 backdrop-blur-md hidden items-center justify-center z-50 p-4 overflow-y-auto"

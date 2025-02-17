@@ -1,3 +1,12 @@
+// Add these at the very top of the file
+const SUPABASE_URL = "https://detboyxzndkphfwdfcac.supabase.co";
+const SUPABASE_ANON_KEY =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRldGJveXh6bmRrcGhmd2RmY2FjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Mzk3OTgxODYsImV4cCI6MjA1NTM3NDE4Nn0.1aE9J99Pk18uqS2xEYkyCJK0c46r8mLRinJVOKkR984";
+
+// Initialize Supabase client
+const { createClient } = supabase;
+const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
 // Configuration
 const CONFIG = {
     startDate: new Date("2025-02-17T15:14:00.000+02:00"),
@@ -35,6 +44,103 @@ const formatters = {
         const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
         return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    },
+};
+
+// Add after the formatters object
+const alerts = {
+    validateTargetPrice: (targetPrice) => {
+        const now = new Date();
+        const secondsElapsed = Math.floor((now - CONFIG.startDate) / 100) / 10;
+        const currentPrice = Math.max(
+            0,
+            START_PRICE - secondsElapsed * CONFIG.priceDecreasePerSecond
+        );
+
+        return targetPrice < currentPrice;
+    },
+
+    handleSubmit: async (event) => {
+        event.preventDefault();
+
+        const email = document.getElementById("email").value;
+        const targetPrice = parseFloat(
+            document.getElementById("targetPrice").value
+        );
+
+        // Validate target price
+        if (!alerts.validateTargetPrice(targetPrice)) {
+            const errorMessage = document.getElementById("successMessage");
+            errorMessage.textContent =
+                "Target price must be lower than the current price";
+            errorMessage.classList.remove(
+                "hidden",
+                "bg-green-500/20",
+                "border-green-500/30",
+                "text-green-400"
+            );
+            errorMessage.classList.add(
+                "bg-red-500/20",
+                "border-red-500/30",
+                "text-red-400"
+            );
+            errorMessage.classList.remove("hidden");
+            setTimeout(() => {
+                errorMessage.classList.add("hidden");
+            }, 5000);
+            return;
+        }
+
+        try {
+            // Send data to Supabase
+            const { data, error } = await supabaseClient
+                .from("price_alerts")
+                .insert([
+                    {
+                        email: email,
+                        target_price: targetPrice,
+                        created_at: new Date().toISOString(),
+                        current_price:
+                            START_PRICE -
+                            ((new Date() - CONFIG.startDate) / 1000) *
+                                CONFIG.priceDecreasePerSecond,
+                    },
+                ]);
+
+            if (error) throw error;
+
+            // Hide the form and title
+            const formContainer =
+                document.querySelector(".form-container").parentElement;
+            formContainer.innerHTML = `
+                <div class="text-center py-2">
+                    <div class="text-green-400 mb-2">✓ Alert set successfully!</div>
+                    <p class="text-gray-400 text-sm">
+                        We'll email you at ${email} when the price drops below $${targetPrice}
+                    </p>
+                </div>
+            `;
+        } catch (error) {
+            // Show error message
+            const message = document.getElementById("successMessage");
+            message.textContent = "Error saving your alert. Please try again.";
+            message.classList.remove(
+                "hidden",
+                "bg-green-500/20",
+                "border-green-500/30",
+                "text-green-400"
+            );
+            message.classList.add(
+                "bg-red-500/20",
+                "border-red-500/30",
+                "text-red-400"
+            );
+            message.classList.remove("hidden");
+            setTimeout(() => {
+                message.classList.add("hidden");
+            }, 5000);
+            console.error("Error:", error);
+        }
     },
 };
 
@@ -167,6 +273,11 @@ function init() {
     document.querySelectorAll("[data-starting-price]").forEach((element) => {
         element.textContent = formatters.startingPrice.format(START_PRICE);
     });
+
+    // Set up price alert form
+    document
+        .getElementById("alertForm")
+        .addEventListener("submit", alerts.handleSubmit);
 }
 
 // Start the app
