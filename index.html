@@ -103,6 +103,35 @@
                     transparent 80%
                 );
             }
+
+            @keyframes scaleIn {
+                from {
+                    opacity: 0;
+                    transform: scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: scale(1);
+                }
+            }
+
+            .animate-scale-in {
+                animation: scaleIn 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+                opacity: 0;
+            }
+
+            .delay-1 {
+                animation-delay: 0.1s;
+            }
+            .delay-2 {
+                animation-delay: 0.2s;
+            }
+            .delay-3 {
+                animation-delay: 0.3s;
+            }
+            .delay-4 {
+                animation-delay: 0.4s;
+            }
         </style>
     </head>
     <body class="bg-black text-white font-['DM_Sans']">
@@ -116,7 +145,7 @@
                 <div
                     class="max-w-4xl mx-auto text-center space-y-6 md:space-y-8"
                 >
-                    <h1 class="text-4xl md:text-7xl font-bold">
+                    <h1 class="animate-scale-in text-4xl md:text-7xl font-bold">
                         <span
                             class="bg-gradient-to-r from-white via-white/90 to-white bg-clip-text text-transparent"
                             >Dutch Auction for</span
@@ -127,7 +156,9 @@
                             >MakeMoney.now</span
                         >
                     </h1>
-                    <p class="text-xl text-gray-400 text-balance">
+                    <p
+                        class="animate-scale-in delay-1 text-xl text-gray-400 text-balance"
+                    >
                         Secure this premium domain name through a Dutch auction
                         system. Price drops
                         <span class="text-blue-400">$0.01 / second</span>
@@ -135,7 +166,9 @@
                     </p>
                 </div>
 
-                <div class="mt-8 md:mt-16 max-w-3xl mx-auto px-2 md:px-0">
+                <div
+                    class="animate-scale-in delay-2 mt-8 md:mt-16 max-w-3xl mx-auto px-2 md:px-0"
+                >
                     <div class="text-center space-y-2">
                         <div
                             class="uppercase tracking-wider font-medium text-sm md:text-base"
@@ -184,8 +217,17 @@
                     </div>
                 </div>
 
-                <!-- Update the comparison section -->
-                <div class="mt-12 md:mt-16 max-w-3xl mx-auto px-4">
+                <div
+                    class="animate-scale-in delay-3 mt-12 md:mt-16 max-w-3xl mx-auto px-4"
+                >
+                    <h2 class="text-3xl md:text-4xl font-bold text-center mb-6">
+                        <span
+                            class="bg-gradient-to-r from-white via-white/90 to-white bg-clip-text text-transparent"
+                        >
+                            Why Buy?
+                        </span>
+                    </h2>
+
                     <div
                         class="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-sm"
                     >
@@ -230,9 +272,8 @@
                     </div>
                 </div>
 
-                <!-- Info Boxes -->
                 <div
-                    class="mt-16 md:mt-24 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-0"
+                    class="animate-scale-in delay-4 mt-16 md:mt-24 max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 px-4 md:px-0"
                 >
                     <div
                         class="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-sm flex flex-col h-full"
@@ -323,8 +364,9 @@
                     </div>
                 </div>
 
-                <!-- Add this after the existing info boxes -->
-                <div class="mt-8 max-w-5xl mx-auto px-4 md:px-0">
+                <div
+                    class="animate-scale-in delay-4 mt-8 max-w-5xl mx-auto px-4 md:px-0"
+                >
                     <div
                         class="bg-white/5 border border-white/10 rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-sm"
                     >
