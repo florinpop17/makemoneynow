@@ -39,72 +39,40 @@ const formatters = {
 };
 
 // UI Components
-const createDigit = (digit, type = "normal") => {
+const digitClasses = {
+    normal: {
+        container:
+            "w-[40px] md:w-[80px] h-20 md:h-36 bg-black/50 border border-white/10 rounded-lg flex items-center justify-center",
+        content: "text-white text-4xl md:text-7xl font-bold",
+    },
+    cents: {
+        container:
+            "w-[28px] md:w-[50px] h-16 md:h-28 bg-black/50 border border-white/10 rounded-lg flex items-center justify-center",
+        content: "text-white text-2xl md:text-5xl font-bold",
+    },
+    symbol: {
+        container: "w-6 md:w-12 h-20 md:h-36 flex items-center justify-center",
+        content: "text-white text-4xl md:text-7xl",
+    },
+    separator: {
+        container: "w-3 md:w-6 h-20 md:h-36 flex items-center justify-center",
+        content: "text-white text-4xl md:text-7xl",
+    },
+};
+
+function createDigit(digit, type = "normal") {
     const div = document.createElement("div");
-
-    // Base classes for different types
-    const classes = {
-        normal: {
-            container:
-                "w-[50px] md:w-[80px] h-24 md:h-36 bg-black/50 border border-white/10 rounded-lg flex items-center justify-center",
-            content: "text-white text-5xl md:text-7xl font-bold",
-        },
-        cents: {
-            container:
-                "w-[35px] md:w-[50px] h-20 md:h-28 bg-black/50 border border-white/10 rounded-lg flex items-center justify-center",
-            content: "text-white text-3xl md:text-5xl font-bold",
-        },
-        symbol: {
-            container:
-                "w-8 md:w-12 h-24 md:h-36 flex items-center justify-center",
-            content: "text-white text-5xl md:text-7xl",
-        },
-        separator: {
-            container:
-                "w-4 md:w-6 h-24 md:h-36 flex items-center justify-center",
-            content: "text-white text-5xl md:text-7xl",
-        },
-    };
-
-    div.className = classes[type].container;
-
     const content = document.createElement("div");
-    content.className = classes[type].content;
+
+    div.className = digitClasses[type].container;
+    content.className = digitClasses[type].content;
     content.textContent = digit;
 
     div.appendChild(content);
     return div;
-};
+}
 
-// Update functions
-function updatePriceDisplay(price) {
-    if (price === lastDisplayedPrice) return;
-
-    const display = document.getElementById("priceDisplay");
-    display.innerHTML = "";
-
-    // Add dollar symbol
-    display.appendChild(createDigit("$", "symbol"));
-
-    // Split price into dollars and cents
-    const [dollars, cents] = price.split(".");
-
-    // Add dollar digits with commas
-    dollars.split("").forEach((digit) => {
-        if (digit === ",") {
-            display.appendChild(createDigit(",", "separator"));
-        } else {
-            display.appendChild(createDigit(digit, "normal"));
-        }
-    });
-
-    // Add cents
-    display.appendChild(createDigit(".", "separator"));
-    cents.split("").forEach((digit) => {
-        display.appendChild(createDigit(digit, "cents"));
-    });
-
-    // Update email link with current price
+function updateEmailLink(price) {
     const emailLink = document.querySelector('a[href^="mailto"]');
     if (emailLink) {
         const subject = encodeURIComponent(`Lock MakeMoney.now at ${price}`);
@@ -113,7 +81,30 @@ function updatePriceDisplay(price) {
         );
         emailLink.href = `mailto:florin@florin-pop.com?subject=${subject}&body=${body}`;
     }
+}
 
+function updatePriceDisplay(price) {
+    if (price === lastDisplayedPrice) return;
+
+    const display = document.getElementById("priceDisplay");
+    display.innerHTML = "";
+
+    const [dollars, cents] = price.split(".");
+    const digits = [
+        { value: "$", type: "symbol" },
+        ...dollars.split("").map((d) => ({
+            value: d,
+            type: d === "," ? "separator" : "normal",
+        })),
+        { value: ".", type: "separator" },
+        ...cents.split("").map((d) => ({ value: d, type: "cents" })),
+    ];
+
+    digits.forEach(({ value, type }) => {
+        display.appendChild(createDigit(value, type));
+    });
+
+    updateEmailLink(price);
     lastDisplayedPrice = price;
 }
 
@@ -123,15 +114,26 @@ function updateTimer() {
 
     if (timeDiff <= 0) {
         document.getElementById("timeLeft").textContent = "Auction ended";
+        document.getElementById("timeLeftPrice").textContent = "Auction ended";
         return;
     }
 
-    // Update time remaining
-    document.getElementById("timeLeft").textContent =
-        formatters.timeLeft(timeDiff);
+    // Calculate elapsed time in seconds (rounded to 1 decimal place)
+    const secondsElapsed = Math.floor((now - CONFIG.startDate) / 100) / 10;
 
-    // Update price
-    const secondsElapsed = (now - CONFIG.startDate) / 1000;
+    // Calculate remaining time based on the same elapsed seconds
+    const remainingSeconds = SECONDS_TO_SELL - secondsElapsed;
+    const days = Math.floor(remainingSeconds / (24 * 60 * 60));
+    const hours = Math.floor((remainingSeconds % (24 * 60 * 60)) / (60 * 60));
+    const minutes = Math.floor((remainingSeconds % (60 * 60)) / 60);
+    const seconds = Math.floor(remainingSeconds % 60);
+    const timeLeftFormatted = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+    // Update both time displays
+    document.getElementById("timeLeft").textContent = timeLeftFormatted;
+    document.getElementById("timeLeftPrice").textContent = timeLeftFormatted;
+
+    // Calculate price using the same elapsed seconds
     const currentPrice = Math.max(
         0,
         START_PRICE - secondsElapsed * CONFIG.priceDecreasePerSecond
@@ -141,9 +143,17 @@ function updateTimer() {
 
 // Initialization
 function init() {
-    // Set up timer
-    setInterval(updateTimer, 100);
+    // Set up single timer using requestAnimationFrame
+    function animate() {
+        updateTimer();
+        requestAnimationFrame(animate);
+    }
+
+    // Initial update
     updateTimer();
+
+    // Start animation loop
+    requestAnimationFrame(animate);
 
     // Set start date display
     document.getElementById("startDate").textContent =
