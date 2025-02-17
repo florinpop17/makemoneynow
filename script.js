@@ -1,6 +1,6 @@
 // Configuration
 const CONFIG = {
-    startDate: new Date("2025-02-17T11:23:00.000+00:00"),
+    startDate: new Date("2025-02-17T15:14:00.000+02:00"),
     daysToSell: 100,
     priceDecreasePerSecond: 0.01,
 };
