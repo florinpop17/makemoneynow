@@ -1,0 +1,10 @@
+{
+    "imports": {},
+    "tasks": {
+        "deploy": "supabase functions deploy send-price-alerts --entrypoint index.js"
+    },
+    "compilerOptions": {
+        "allowJs": true,
+        "lib": ["deno.window"]
+    }
+}
